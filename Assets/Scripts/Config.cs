@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using PowerUp;
 using UnityEngine;
 
 public class Config
@@ -42,4 +44,26 @@ public class Config
     // LocalizationSettings.SelectedLocale =
     // LocalizationSettings.AvailableLocales.Locales.First(x => x.Identifier.Code == languageIdentifier);
     // }
+
+    public static void BoughtPowerUp(PowerUpType type)
+    {
+        var typeString = type.ToString();
+        var numberOfPowerUpsInType = PlayerPrefs.GetInt(typeString, 0);
+        PlayerPrefs.SetInt(typeString, numberOfPowerUpsInType + 1);
+    }
+
+    public static Dictionary<int,PowerUpType> PowerUpsBought = new Dictionary<int, PowerUpType>();
+    public static void LoadPowerUps()
+    {
+        PowerUpsBought.Clear();
+        foreach (var powerUpType in Enum.GetValues(typeof(PowerUpType)))
+        {
+            var typeString = powerUpType.ToString();
+            var numberOfPowerUpsInType = PlayerPrefs.GetInt(typeString, 0);
+            for (var i = 0; i < numberOfPowerUpsInType; i++)
+            {
+                PowerUpsBought.Add(i, (PowerUpType)powerUpType);
+            }
+        }
+    }
 }
