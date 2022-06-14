@@ -52,18 +52,16 @@ public class Config
         PlayerPrefs.SetInt(typeString, numberOfPowerUpsInType + 1);
     }
 
-    public static Dictionary<int,PowerUpType> PowerUpsBought = new Dictionary<int, PowerUpType>();
+    public static Dictionary<PowerUpType, int> PowerUps;
+
     public static void LoadPowerUps()
     {
-        PowerUpsBought.Clear();
+        PowerUps = new Dictionary<PowerUpType, int>();
         foreach (var powerUpType in Enum.GetValues(typeof(PowerUpType)))
         {
             var typeString = powerUpType.ToString();
             var numberOfPowerUpsInType = PlayerPrefs.GetInt(typeString, 0);
-            for (var i = 0; i < numberOfPowerUpsInType; i++)
-            {
-                PowerUpsBought.Add(i, (PowerUpType)powerUpType);
-            }
+            PowerUps.Add((PowerUpType) powerUpType, numberOfPowerUpsInType);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace PowerUp
 
         public override void Activate(PlayerController player)
         {
-            player.luck = 100;
+            player.activatedSmokingPipe = true;
         }
     }
 }
