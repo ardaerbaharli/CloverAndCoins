@@ -5,7 +5,15 @@ using UnityEngine.Audio;
 public class SoundManager : MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer;
-    [SerializeField] private AudioSource gameBackgroundSound;
+    [SerializeField] private AudioSource boughtPowerUp;
+    [SerializeField] private AudioSource failed;
+    [SerializeField] private AudioSource game1Background;
+    [SerializeField] private AudioSource game2Background;
+    [SerializeField] private AudioSource wonBonus;
+    [SerializeField] private AudioSource outsideGameBackground;
+    [SerializeField] private AudioSource usingPowerUp;
+    [SerializeField] private AudioSource won;
+    
 
     public static SoundManager instance;
 
@@ -25,7 +33,6 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         SetSound(PlayerPrefsX.GetBool("Sound", true));
-        gameBackgroundSound.Play();
     }
 
 
@@ -39,9 +46,45 @@ public class SoundManager : MonoBehaviour
 
     public void PauseResume(bool value)
     {
-        if (value)
-            gameBackgroundSound.UnPause();
-        else
-            gameBackgroundSound.Pause();
+    }
+
+    public void PlayMenuSong()
+    {
+        outsideGameBackground.Play();
+    }
+
+    public void BoughtPowerUp()
+    {
+        boughtPowerUp.Play();
+    }
+
+    public void Failed()
+    {
+        failed.Play();
+    }
+
+    public void Won()
+    {
+        won.Play();
+    }
+
+    public void PauseMenuSong()
+    {
+        outsideGameBackground.Pause();
+    }
+
+    public void Play1of3Song()
+    {
+            game1Background.Play();
+    }
+    
+    public void PlayBiggerSong()
+    {
+        game2Background.Play();
+    }
+
+    public void ActivatePowerUp()
+    {
+        usingPowerUp.Play();
     }
 }

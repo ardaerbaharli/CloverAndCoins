@@ -7,6 +7,7 @@ namespace PowerUp
         public override void Activate(PlayerController player)
         {
             player.remainingGuesses = 2;
+            player.activatedPowerUp = this;
         }
     }
 }

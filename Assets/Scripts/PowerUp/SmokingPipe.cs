@@ -7,6 +7,8 @@ namespace PowerUp
         public override void Activate(PlayerController player)
         {
             player.activatedSmokingPipe = true;
+            player.activatedPowerUp = this;
+
         }
     }
 }

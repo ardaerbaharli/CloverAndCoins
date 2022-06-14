@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,11 @@ public class OneOfThreeGame : MonoBehaviour
 
     private Vector3 leftHatPos, rightHatPos;
     private int luckyNumber;
+
+    private void Start()
+    {
+        SoundManager.instance.Play1of3Song();
+    }
 
     private void OnEnable()
     {
@@ -187,6 +193,6 @@ public class OneOfThreeGame : MonoBehaviour
 
     public void GoBack()
     {
-        gameObject.SetActive(false);
+        SceneManager.LoadScene("Games");
     }
 }

@@ -38,6 +38,7 @@ public class StoreMenuController : MonoBehaviour
 
     public void YesButton()
     {
+        SoundManager.instance.BoughtPowerUp();
         Config.Coins -= lastClickedPowerUpPrice;
         Config.BoughtPowerUp(lastClickedPowerUpType);
         lastClickedPowerUpPrice = 0;

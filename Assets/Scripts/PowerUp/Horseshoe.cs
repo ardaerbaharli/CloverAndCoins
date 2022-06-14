@@ -7,6 +7,8 @@ namespace PowerUp
         public override void Activate(PlayerController player)
         {
             player.numberOfChoices = 3;
+            player.activatedPowerUp = this;
+
         }
     }
 }

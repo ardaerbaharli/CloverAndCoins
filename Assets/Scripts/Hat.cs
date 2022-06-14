@@ -55,6 +55,8 @@ public class Hat : MonoBehaviour
 
     public void OnClicked()
     {
+        Vibration.Vibrate(2);
+
         onClicked?.Invoke(id);
     }
 }

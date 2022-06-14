@@ -11,6 +11,7 @@ public class Leaf : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        Vibration.Vibrate(2);
         onPointerDown_?.Invoke(id);
     }
 }

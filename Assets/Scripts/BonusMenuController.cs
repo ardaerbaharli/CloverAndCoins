@@ -61,10 +61,14 @@ public class BonusMenuController : MonoBehaviour
         blur.SetActive(true);
         if (selection == answer)
         {
+            SoundManager.instance.Won();
             Config.Coins++;
             winPanel.SetActive(true);
         }
         else
+        {
+            SoundManager.instance.Failed();
             losePanel.SetActive(true);
+        }
     }
 }
