@@ -13,7 +13,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource outsideGameBackground;
     [SerializeField] private AudioSource usingPowerUp;
     [SerializeField] private AudioSource won;
-    
+
 
     public static SoundManager instance;
 
@@ -43,13 +43,14 @@ public class SoundManager : MonoBehaviour
     }
 
 
-
     public void PauseResume(bool value)
     {
     }
 
     public void PlayMenuSong()
     {
+        // if already playing, return
+        if (outsideGameBackground.isPlaying) return;
         outsideGameBackground.Play();
     }
 
@@ -75,16 +76,37 @@ public class SoundManager : MonoBehaviour
 
     public void Play1of3Song()
     {
-            game1Background.Play();
+        // if already playing, return
+        if (game1Background.isPlaying) return;
+        game1Background.Play();
     }
-    
+
     public void PlayBiggerSong()
     {
+        // if already playing, return
+        if (game2Background.isPlaying) return;
         game2Background.Play();
     }
 
     public void ActivatePowerUp()
     {
         usingPowerUp.Play();
+    }
+
+    public void PauseAllBackgroundSongs()
+    {
+        PauseMenuSong();
+        PauseGame1Background();
+        PauseGame2Background();
+    }
+
+    public void PauseGame2Background()
+    {
+        game2Background.Pause();
+    }
+
+    public void PauseGame1Background()
+    {
+        game1Background.Pause();
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using PowerUp;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Components;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.Random;
@@ -27,6 +28,12 @@ public class OneOfThreeGame : MonoBehaviour
     private Vector3 leftHatPos, rightHatPos;
     private int luckyNumber;
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 30;
+
+    }
+
     private void Start()
     {
         SoundManager.instance.Play1of3Song();
@@ -34,6 +41,8 @@ public class OneOfThreeGame : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(Config.LoadLocale(Config.ActiveLanguage));
+
         playerController.remainingGuesses = 1;
         Config.LoadPowerUps();
         numberOfDrinkPowerUps.text = "x" + Config.PowerUps[PowerUpType.Drink];
@@ -48,23 +57,29 @@ public class OneOfThreeGame : MonoBehaviour
 
         leftHatPos = new Vector3(hats.First().rect.anchoredPosition.x, hatLoweredPosY, 0);
         rightHatPos = new Vector3(hats.Last().rect.anchoredPosition.x, hatLoweredPosY, 0);
-
-        StartCoroutine(StartGame());
     }
 
-    private IEnumerator StartGame()
+    public void StartGame()
     {
+        GetComponent<Button>().enabled = false;
+        StartCoroutine(StartGameC());
+    }
+
+    private IEnumerator StartGameC()
+    {
+        yield return new WaitForSeconds(0.3f);
+        hats.ForEach(x => StartCoroutine(LiftHat(x)));
+        coin.SetActive(true);
+
         yield return new WaitForSeconds(1);
         StartCoroutine(LowerHats());
+
         yield return new WaitUntil(() => hats.All(x => !x.isMoving));
-        HideCoin();
+        coin.SetActive(false);
+
         StartCoroutine(ShuffleHats());
     }
 
-    private void HideCoin()
-    {
-        coin.SetActive(false);
-    }
 
     private IEnumerator LowerHats()
     {
@@ -107,6 +122,7 @@ public class OneOfThreeGame : MonoBehaviour
 
         yield return new WaitUntil(() => hats.All(x => !x.isMoving));
         hatsContainer.GetComponent<HorizontalLayoutGroup>().enabled = true;
+        hats.ForEach(x => x.gameObject.GetComponent<Button>().enabled = true);
     }
 
     private IEnumerator LiftHat(Hat hat)
@@ -134,7 +150,9 @@ public class OneOfThreeGame : MonoBehaviour
             didWin = true;
         }
 
-        coin.GetComponent<RectTransform>().localPosition = hats[luckyNumber].rect.localPosition;
+        var coinRect = coin.GetComponent<RectTransform>();
+        var coinPos = coinRect.localPosition;
+        coinRect.localPosition = new Vector2(hats[luckyNumber].rect.localPosition.x, coinPos.y);
 
         if (didWin)
         {
@@ -153,7 +171,7 @@ public class OneOfThreeGame : MonoBehaviour
         {
             if (playerController.remainingGuesses > 0)
             {
-                lepText.text = "Try again";
+                lepText.GetComponent<LocalizeStringEvent>().SetEntry("TooBadTryAgain");
             }
             else
             {
@@ -187,7 +205,9 @@ public class OneOfThreeGame : MonoBehaviour
         if (playerController.activatedPowerUp) return;
         var clickedButton = EventSystem.current.currentSelectedGameObject.GetComponent<PowerUpButton>();
         if (Config.PowerUps[clickedButton.PowerUpType] <= 0) return;
-
+        Config.DecreasePowerUp(clickedButton.PowerUpType);
+        numberOfDrinkPowerUps.text = "x" + Config.PowerUps[PowerUpType.Drink];
+        numberOfSmokingPipePowerUps.text = "x" + Config.PowerUps[PowerUpType.SmokingPipe];
         playerController.ActivatePowerUp(clickedButton.PowerUpType);
     }
 

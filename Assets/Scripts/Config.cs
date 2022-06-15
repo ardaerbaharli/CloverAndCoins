@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using PowerUp;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class Config
 {
@@ -39,11 +42,12 @@ public class Config
 
     public static float MaxSoundVolume = -10f;
 
-    // public static void LoadLocale(string languageIdentifier)
-    // {
-    // LocalizationSettings.SelectedLocale =
-    // LocalizationSettings.AvailableLocales.Locales.First(x => x.Identifier.Code == languageIdentifier);
-    // }
+    public static IEnumerator LoadLocale(string languageIdentifier)
+    {
+        yield return LocalizationSettings.InitializationOperation;
+        LocalizationSettings.SelectedLocale =
+            LocalizationSettings.AvailableLocales.Locales.First(x => x.Identifier.Code == languageIdentifier);
+    }
 
     public static void BoughtPowerUp(PowerUpType type)
     {
@@ -53,6 +57,14 @@ public class Config
     }
 
     public static Dictionary<PowerUpType, int> PowerUps;
+    
+    public static void DecreasePowerUp(PowerUpType type)
+    {
+        PowerUps[type]--;
+        var typeString = type.ToString();
+        var numberOfPowerUpsInType = PlayerPrefs.GetInt(typeString, 0);
+        PlayerPrefs.SetInt(typeString, numberOfPowerUpsInType - 1);
+    }
 
     public static void LoadPowerUps()
     {

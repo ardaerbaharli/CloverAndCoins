@@ -32,6 +32,7 @@ public class BonusMenuController : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(Config.LoadLocale(Config.ActiveLanguage));
         answer = Range(1, 5);
 
         leaf1.onPointerDown_ += OnLeafClick;

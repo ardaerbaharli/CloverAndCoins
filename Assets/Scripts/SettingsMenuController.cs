@@ -5,10 +5,9 @@ public class SettingsMenuController : MonoBehaviour
 {
     [SerializeField] private ToggleSwitch volumeToggle;
     [SerializeField] private ToggleSwitch vibrationToggle;
-    [SerializeField] private ToggleSwitch languageToggleRu;
-    [SerializeField] private ToggleSwitch languageToggleEn;
+    [SerializeField] private DoubleSwitch languageToggle;
     [SerializeField] private GameObject mainMenuPanel;
-    
+
 
     public void GoBack()
     {
@@ -19,14 +18,18 @@ public class SettingsMenuController : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(Config.LoadLocale(Config.ActiveLanguage));
         volumeToggle.Toggle(Config.IsVolumeOn);
         vibrationToggle.Toggle(Config.IsVibrationOn);
-
+        languageToggle.SetSwitchNames("en", "ru");
+        languageToggle.ActivateSwitch(Config.ActiveLanguage);
+        
+        
         volumeToggle.valueChanged += OnVolumeChanged;
         vibrationToggle.valueChanged += OnVibrationChanged;
-        languageToggleRu.valueChanged += OnLanguageChangedRu;
-        languageToggleEn.valueChanged += OnLanguageChangedEn;
+        languageToggle.OnSwitchChanged += OnLanguageChanged;
     }
+
 
     private void OnDisable()
     {
@@ -34,18 +37,12 @@ public class SettingsMenuController : MonoBehaviour
         vibrationToggle.valueChanged -= OnVibrationChanged;
     }
 
-    private void OnLanguageChangedEn(bool value)
-    {
-        languageToggleRu.Toggle(!value,false);
-        Config.ActiveLanguage = "en";
-        // Config.LoadLocale(Config.ActiveLanguage);
-    }
 
-    private void OnLanguageChangedRu(bool value)
+    private void OnLanguageChanged(string s)
     {
-        languageToggleEn.Toggle(!value,false);
-        Config.ActiveLanguage = "ru";
-        // Config.LoadLocale(Config.ActiveLanguage);
+        if (Config.ActiveLanguage.Equals(s)) return;
+        Config.ActiveLanguage = s;
+        StartCoroutine(Config.LoadLocale(Config.ActiveLanguage));
     }
 
     private void OnVibrationChanged(bool value)

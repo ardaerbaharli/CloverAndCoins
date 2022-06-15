@@ -14,6 +14,7 @@ public class StoreMenuController : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(Config.LoadLocale(Config.ActiveLanguage));
         coinsText.text = Config.Coins.ToString();
         buyPowerUpButtons.ForEach(b => b.CheckIfAffordable(Config.Coins));
     }
@@ -43,6 +44,8 @@ public class StoreMenuController : MonoBehaviour
         Config.BoughtPowerUp(lastClickedPowerUpType);
         lastClickedPowerUpPrice = 0;
         lastClickedPowerUpType = PowerUpType.None;
+        coinsText.text = Config.Coins.ToString();
+        buyPowerUpButtons.ForEach(b => b.CheckIfAffordable(Config.Coins));
         promptPanel.SetActive(false);
     }
 
